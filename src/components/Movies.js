@@ -1,23 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
+import { selectMovies } from '../features/movie/movieSlice'
+import { useSelector } from 'react-redux'
 
 function Movies() {
+  const movies = useSelector(selectMovies)
   return (
+    
     <Container>
       <h4>Recommended for You</h4>
       <Content>
-        <Wrap>
-          <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/77CD8DDC0961550A0E431627EC759D5DA9F52802D00B23DA64754B315E473E83/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="recommended-img"/>
-        </Wrap>
-        <Wrap>
-          <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/77CD8DDC0961550A0E431627EC759D5DA9F52802D00B23DA64754B315E473E83/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="recommended-img"/>
-        </Wrap>
-        <Wrap>
-          <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/77CD8DDC0961550A0E431627EC759D5DA9F52802D00B23DA64754B315E473E83/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="recommended-img"/>
-        </Wrap>
-        <Wrap>
-          <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/77CD8DDC0961550A0E431627EC759D5DA9F52802D00B23DA64754B315E473E83/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="recommended-img"/>
-        </Wrap>
+        { movies &&
+          movies.map((movie) => (
+            <Wrap key={movie.id}>
+              <img src={movie.cardImg} alt={movie.title} />
+            </Wrap>
+          ))
+        }
       </Content>
     </Container>
   )
