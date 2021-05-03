@@ -6,22 +6,66 @@ import { useSelector } from 'react-redux'
 
 function Movies() {
   const movies = useSelector(selectMovies)
+
   return (
-    
-    <Container>
-      <h4>Recommended for You</h4>
-      <Content>
-        { movies &&
-          movies.map((movie) => (
-            <Wrap key={movie.id}>
-              <Link to={`/detail/${movie.id}`}>
-              <img src={movie.cardImg} alt={movie.title} />
-              </Link>
-            </Wrap>
-          ))
-        }
-      </Content>
-    </Container>
+    <>
+      <Container>
+        <h4>Recommended for You</h4>
+        <Content>
+          { movies &&
+            movies.slice(0, 4).map((movie) => (
+              <Wrap key={movie.id}>
+                <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+                </Link>
+              </Wrap>
+            ))
+          }
+        </Content>
+      </Container>
+      <Container>
+        <h4>New to Disney+</h4>
+        <Content>
+          { movies &&
+            movies.slice(4, 8).map((movie) => (
+              <Wrap key={movie.id}>
+                <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+                </Link>
+              </Wrap>
+            ))
+          }
+        </Content>
+      </Container>
+      <Container>
+        <h4>Originals</h4>
+        <Content>
+          { movies &&
+            movies.slice(8, 12).map((movie) => (
+              <Wrap key={movie.id}>
+                <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+                </Link>
+              </Wrap>
+            ))
+          }
+        </Content>
+      </Container>
+      <Container>
+        <h4>Trending</h4>
+        <Content>
+          { movies &&
+            movies.slice(12, 16).map((movie) => (
+              <Wrap key={movie.id}>
+                <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+                </Link>
+              </Wrap>
+            ))
+          }
+        </Content>
+      </Container>
+    </>
   )
 }
 
@@ -29,6 +73,7 @@ export default Movies
 
 const Container = styled.div`
   margin-top: 30px;
+  margin-bottom: 30px;
 `
 
 const Content = styled.div`

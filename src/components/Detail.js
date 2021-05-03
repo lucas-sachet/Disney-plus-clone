@@ -14,7 +14,7 @@ function Detail() {
     .then((doc)=> {
       doc ? setMovie(doc.data()) : window.location.href="../index.html"
     })
-  }, [])
+  }, [id])
 
   return (
     <Container>
@@ -144,6 +144,11 @@ const AddButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:hover {
+    filter: invert(1);
+    border: none;
+  }
 
   span {
     font-size: 30px;

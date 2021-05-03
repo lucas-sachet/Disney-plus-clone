@@ -13,6 +13,7 @@ function ImgSlider() {
     slidesToShow: 1,
     slideToScroll: 1,
     autoplay: true,
+    arrows: false,
   }
 
   return (
@@ -22,6 +23,12 @@ function ImgSlider() {
       </Wrap>
       <Wrap>
         <img src="/images/slider-badag.jpg" alt="slider-img"/>
+      </Wrap>
+      <Wrap>
+        <img src="/images/slider-scale.jpg" alt="slider-img"/>
+      </Wrap>
+      <Wrap>
+        <img src="/images/slider-scales.jpg" alt="slider-img"/>
       </Wrap>
     </Carousel>
   )

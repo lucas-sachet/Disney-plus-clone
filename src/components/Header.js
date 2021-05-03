@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { auth, provider } from '../firebase'
 import { selectUserName, selectUserPhoto, setSignOut, setUserLogin } from '../features/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,7 +16,7 @@ function Header() {
   useEffect(() => {
    auth.onAuthStateChanged(async (user) => {
      if(user){
-      dispatch(setUserLogin({
+       dispatch(setUserLogin({
         name: user.displayName,
         email: user.email,
         photo: user.photoURL
@@ -24,7 +24,7 @@ function Header() {
       history.push('/')
      }
    })
-  }, [])
+  }, [dispatch, history])
 
   const signIn = () => {
     auth.signInWithPopup(provider)
@@ -37,13 +37,20 @@ function Header() {
       }))
       history.push('/')
     })
+    .catch(err => {
+      return console.error(err);
+    })
   }
+ 
 
   const signOut = () => {
     auth.signOut()
     .then(() => {
       dispatch(setSignOut())
       history.push('/login')
+    })
+    .catch(err => {
+      return console.error(err);
     })
   }
 
@@ -57,34 +64,35 @@ function Header() {
         (
         <>
           <NavMenu>
-            <a>
-              <img src="/images/home-icon.svg" alt="home-icon"/>
-              <span>HOME</span>
-            </a>
-            <a>
+            <Link to="/">
+                <img src="/images/home-icon.svg" alt="home-icon"/>
+                <span>HOME</span>
+            </Link>
+            <Link to="/search">
               <img src="/images/search-icon.svg" alt="search-icon"/>
               <span>SEARCH</span>
-            </a>
-            <a>
+            </Link>
+            <Link to="/watchlist">
               <img src="/images/watchlist-icon.svg" alt="watchlist-icon"/>
               <span>WATCHLIST</span>
-            </a>
-            <a>
+            </Link>
+            <Link to="/originals">
               <img src="/images/original-icon.svg" alt="original-icon"/>
               <span>ORIGINALS</span>
-            </a>
-            <a>
+            </Link>
+            <Link to="/movies">
               <img src="/images/movie-icon.svg" alt="movie-icon"/>
               <span>MOVIES</span>
-            </a>
-            <a>
+            </Link>
+            <Link to="/series">
               <img src="/images/series-icon.svg" alt="series-icon"/>
               <span>SERIES</span>
-            </a>
+            </Link>
           </NavMenu>
           <UserImg 
-          onClick={signOut}
-          src="https://lh3.googleusercontent.com/ogw/ADGmqu97PAjtodVPOmioGr5TudPKId5LZGPhSbiU4X-7dQ=s32-c-mo"/>
+            onClick={signOut}
+            src={userPhoto}
+          />
         </>
         )  
       }
@@ -120,6 +128,8 @@ const NavMenu = styled.div`
     align-items: center;
     padding: 0 12px;
     cursor: pointer;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
 
     img {
       height: 20px;
