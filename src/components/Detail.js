@@ -1,39 +1,59 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useParams } from 'react-router-dom' 
+import db from '../firebase'
 
 function Detail() {
+  const { id } = useParams();
+  const [movie, setMovie] = useState();
+
+  useEffect(() => {
+    db.collection("movies")
+    .doc(id)
+    .get()
+    .then((doc)=> {
+      doc ? setMovie(doc.data()) : window.location.href="../index.html"
+    })
+  }, [])
+
   return (
     <Container>
-      <Background>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FEBDDA12676B9FEBF496FA2C25D93C284F1624DAB8BB14EDB43FABEF0ABD58C7/scale?width=1200&aspectRatio=1.78&format=jpeg" alt="bg-detail"/>
-      </Background>
+      {movie &&
+       (
+         <>
+            <Background>
+              <img src={movie.backgroundImg} alt={movie.title}/>
+            </Background>
 
-      <ImageTitle>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/679119E881B53C0ED9485B0A245963AB9E428F65A165908BC64C1AFC46C4D8C6/scale?width=500&aspectRatio=1.78" alt="title-img"/>
-      </ImageTitle>
+            <ImageTitle>
+              <img src={movie.titleImg} alt={movie.title}/>
+            </ImageTitle>
 
-      <Controls>
-        <PlayButton>
-          <img src="/images/play-icon-black.png" alt="play"/>
-          <span>PLAY</span>
-        </PlayButton>
-        <TrailerButton>
-          <img src="/images/play-icon-white.png" alt="trailer"/>
-          <span>TRAILER</span>
-        </TrailerButton>
-        <AddButton>
-          <span>+</span>
-        </AddButton>
-        <GroupWatchButton>
-          <img src="/images/group-icon.png" alt="group"/>
-        </GroupWatchButton>
-      </Controls>
-      <Subtitle>
-       2021 &#8226; 20m &#8226; Family, Fantasy, Animation
-      </Subtitle>
-      <Description>
-        A star wars movie to play A star wars movie to play A star wars movie to play
-      </Description>
+            <Controls>
+              <PlayButton>
+                <img src="/images/play-icon-black.png" alt="play"/>
+                <span>PLAY</span>
+              </PlayButton>
+              <TrailerButton>
+                <img src="/images/play-icon-white.png" alt="trailer"/>
+                <span>TRAILER</span>
+              </TrailerButton>
+              <AddButton>
+                <span>+</span>
+              </AddButton>
+              <GroupWatchButton>
+                <img src="/images/group-icon.png" alt="group"/>
+              </GroupWatchButton>
+            </Controls>
+            <Subtitle>
+            {movie.subTitle}
+            </Subtitle>
+            <Description>
+              {movie.description}
+            </Description>
+         </>
+       )
+      }
     </Container>
   )
 }
@@ -142,10 +162,11 @@ const Subtitle = styled.div`
   margin-top: 26px;
 `
 
-const Description = styled.div`
+const Description = styled.p`
   color: rgb(249, 249, 249);
-  line-height: 1.4px;
+  line-height: 1,4px;
   font-size: 20px;
   margin-top: 16px;
   max-width: 760px;
+  white-space: normal;
 `

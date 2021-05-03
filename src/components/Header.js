@@ -1,37 +1,94 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { auth, provider } from '../firebase'
+import { selectUserName, selectUserPhoto, setSignOut, setUserLogin } from '../features/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
 import styled from 'styled-components'
 
+
 function Header() {
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const userName = useSelector(selectUserName)
+  const userPhoto = useSelector(selectUserPhoto)
+
+  useEffect(() => {
+   auth.onAuthStateChanged(async (user) => {
+     if(user){
+      dispatch(setUserLogin({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }))
+      history.push('/')
+     }
+   })
+  }, [])
+
+  const signIn = () => {
+    auth.signInWithPopup(provider)
+    .then((result) => {
+      let user = result.user;
+      dispatch(setUserLogin({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }))
+      history.push('/')
+    })
+  }
+
+  const signOut = () => {
+    auth.signOut()
+    .then(() => {
+      dispatch(setSignOut())
+      history.push('/login')
+    })
+  }
+
   return (
     <Nav>
-      <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" alt="home-icon"/>
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" alt="search-icon"/>
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" alt="watchlist-icon"/>
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" alt="original-icon"/>
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" alt="movie-icon"/>
-          <span>MOVIES</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" alt="series-icon"/>
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <UserImg src="https://lh3.googleusercontent.com/ogw/ADGmqu97PAjtodVPOmioGr5TudPKId5LZGPhSbiU4X-7dQ=s32-c-mo"/>
+      <Logo src="/images/logo.svg"/>
+      { !userName ?
+        <LoginContainer>
+          <Login onClick={signIn}>Login</Login>
+        </LoginContainer> :
+        (
+        <>
+          <NavMenu>
+            <a>
+              <img src="/images/home-icon.svg" alt="home-icon"/>
+              <span>HOME</span>
+            </a>
+            <a>
+              <img src="/images/search-icon.svg" alt="search-icon"/>
+              <span>SEARCH</span>
+            </a>
+            <a>
+              <img src="/images/watchlist-icon.svg" alt="watchlist-icon"/>
+              <span>WATCHLIST</span>
+            </a>
+            <a>
+              <img src="/images/original-icon.svg" alt="original-icon"/>
+              <span>ORIGINALS</span>
+            </a>
+            <a>
+              <img src="/images/movie-icon.svg" alt="movie-icon"/>
+              <span>MOVIES</span>
+            </a>
+            <a>
+              <img src="/images/series-icon.svg" alt="series-icon"/>
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+          <UserImg 
+          onClick={signOut}
+          src="https://lh3.googleusercontent.com/ogw/ADGmqu97PAjtodVPOmioGr5TudPKId5LZGPhSbiU4X-7dQ=s32-c-mo"/>
+        </>
+        )  
+      }
+     
     </Nav>
   )
 }
@@ -102,4 +159,30 @@ const UserImg = styled.img`
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
+`
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+`
+
+const Login = styled.div`
+  cursor: pointer;
+  border: 1px solid #f9f9f9;
+  border-radius: 4px;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  letter-spacing: 1.5px;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  transition: all 0.2s ease 0s;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
 `
